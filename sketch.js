@@ -15,7 +15,7 @@ function draw() {
 
   if (random(1)< 0.2){feather.push(new OBJ(0, random(-height,height)))}
 
-for (f of feather){
+for (let [i,f] of feather.entries()){
   let gravity = createVector(0, g * f.m);
   let resistance = f.v.copy().mult(f.v.mag()).mult(-k).mult(sin(f.theta)+2);
   f.applyForce(gravity);
@@ -26,6 +26,8 @@ for (f of feather){
   f.applyForce(wind)
   f.update();
   f.render();
+
+  if (f.checkEdge() == true){feather.splice(i,1)}
 }
 }
 
@@ -37,7 +39,7 @@ class OBJ {
     this.a = createVector(0, 0);
     this.m = random(8,12);
     this.r = random(1.1,1.8);
-    this.c = color(random(220,235),random(170,200),random(225,235));
+    this.c = color(random(220,235),random(150,190),random(225,235));
     this.theta = 0;
     this.n = random(1000);
   }
@@ -64,7 +66,9 @@ class OBJ {
     pop();
   }
 
-  checkEdge(){}
+  checkEdge(){
+  return this.pos.x > width + 20 && this.pos.y > height + 20
+  }
 
   reset(x, y, c) {
     this.pos.x = x;
